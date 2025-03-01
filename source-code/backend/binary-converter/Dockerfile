@@ -1,9 +1,9 @@
 # Etapa de build
 FROM ubuntu:latest AS build
 
-# Atualiza os pacotes e instala o OpenJDK 17 e Maven
+# Atualiza os pacotes e instala OpenJDK 21 e Maven
 RUN apt-get update && apt-get install -y \
-    openjdk-17-jdk \
+    openjdk-21-jdk \
     maven \
     && rm -rf /var/lib/apt/lists/*
 
@@ -17,7 +17,7 @@ COPY source-code/backend/binary-converter/ .
 RUN mvn clean install -DskipTests
 
 # Etapa final para rodar a aplicação
-FROM openjdk:17-jdk-slim
+FROM openjdk:21-jdk-slim
 
 # Define o diretório de trabalho
 WORKDIR /app
