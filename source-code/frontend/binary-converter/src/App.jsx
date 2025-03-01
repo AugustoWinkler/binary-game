@@ -11,7 +11,7 @@ function App() {
     const [messageType, setMessageType] = useState("");
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/generate")
+        fetch("https://binary-game-api-6oct.onrender.com/api/generate")
             .then(res => res.json())
             .then(data => {
                 setBinary(data.binary);
