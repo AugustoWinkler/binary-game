@@ -13,7 +13,7 @@ public class CorsConfig {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("https://binary-game-tau.vercel.app");
+				registry.addMapping("/**").allowedOrigins("https://binary-game-omega.vercel.app");
 			}
 		};
 	}
