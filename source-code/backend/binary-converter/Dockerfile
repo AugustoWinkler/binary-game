@@ -1,18 +1,23 @@
-FROM ubuntu:latest AS build
+# Etapa de build
+FROM maven:3.8.6-eclipse-temurin-21 AS build
 
-RUN apt-get update
-RUN apt-get install openjdk-21-jdk -y
-COPY . .
+# Define o diretório de trabalho dentro do contêiner
+WORKDIR /app
 
-RUN apt-get install maven -y
-RUN mvn clean install
+# Copia apenas os arquivos necessários para o build
+COPY source-code/backend/binary-converter .
 
+# Executa o build com Maven
+RUN mvn clean package -DskipTests
+
+# Etapa de execução (imagem mais leve)
 FROM openjdk:21-jdk-slim
 
+WORKDIR /app
 EXPOSE 8080
 
-COPY --from=build /target/binary-converter-0.0.1-SNAPSHOT.jar app.jar
+# Copia o JAR gerado na etapa anterior
+COPY --from=build /app/target/binary-converter-0.0.1-SNAPSHOT.jar app.jar
 
-ENTRYPOINT ["java","-jar","app.jar"]
-
-
+# Comando para rodar o Spring Boot
+ENTRYPOINT ["java", "-jar", "app.jar"]
