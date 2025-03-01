@@ -1,23 +1,16 @@
-# Etapa de build
-FROM maven:3.8.6-eclipse-temurin-21 AS build
+FROM ubuntu:latest AS build
 
-# Define o diretório de trabalho dentro do contêiner
-WORKDIR /app
+RUN apt-get update
+RUN apt-get install openjdk-17-jdk -y
+COPY . .
 
-# Copia apenas os arquivos necessários para o build
-COPY source-code/backend/binary-converter .
+RUN apt-get install maven -y
+RUN mvn clean install 
 
-# Executa o build com Maven
-RUN mvn clean package -DskipTests
+FROM openjdk:17-jdk-slim
 
-# Etapa de execução (imagem mais leve)
-FROM openjdk:21-jdk-slim
-
-WORKDIR /app
 EXPOSE 8080
 
-# Copia o JAR gerado na etapa anterior
 COPY --from=build /app/target/binary-converter-0.0.1-SNAPSHOT.jar app.jar
 
-# Comando para rodar o Spring Boot
 ENTRYPOINT ["java", "-jar", "app.jar"]
